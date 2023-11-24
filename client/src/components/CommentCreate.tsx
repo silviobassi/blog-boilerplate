@@ -22,7 +22,7 @@ export default function CommentCreate({ postId }) {
           <input
             value={content}
             className="form-control"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onChange={(e) =>
               setContent(e.target.value)
             }
           />

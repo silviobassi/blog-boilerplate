@@ -1,3 +1,4 @@
+import axios from 'axios';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import { randomBytes } from 'crypto';
@@ -13,7 +14,7 @@ app.get('/posts', (req, resp) => {
   resp.send(posts);
 });
 
-app.post('/posts', (req, resp) => {
+app.post('/posts', async (req, resp) => {
   const id = randomBytes(4).toString('hex');
   const { title } = req.body;
   posts[id] = {
@@ -21,8 +22,18 @@ app.post('/posts', (req, resp) => {
     title,
   };
 
+  await axios.post('http://localhost:4005/events', {
+    type: 'PostCreated',
+    data:{id, title}
+  })
+
   resp.status(201).send(posts[id]);
 });
+
+app.post('/events', (req, res) => {
+  console.log('Received Event', req.body.type)
+  res.send({})
+})
 
 app.listen(4000, () => {
   console.log('Listening on 4000');
